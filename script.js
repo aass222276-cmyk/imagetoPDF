@@ -12,10 +12,20 @@ window.addEventListener('load', () => {
     let isImageLoaded = false, imageCanvas, ctx, uploadedImageWidth, uploadedImageHeight;
     let coordMapRatio = [], orderMapTampage = [], orderMapMihiraki = [];
 
-    // (DOM取得 ... イベントリスナー ... 変更なし)
+    // ★★★ 修正点: 「1」の動くバージョンから、DOM取得を全て復元 ★★★
     const imageLoader = document.getElementById('imageLoader');
-    // (中略 ... btnMihiraki までのDOM取得)
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const statusEl = document.getElementById('status');
+    const pdfNameTampage = document.getElementById('pdfNameTampage');
+    const startPageTampage = document.getElementById('startPageTampage');
+    const endPageTampage = document.getElementById('endPageTampage');
+    const btnTampage = document.getElementById('btnTampage');
+    const pdfNameMihiraki = document.getElementById('pdfNameMihiraki');
+    const startPageMihiraki = document.getElementById('startPageMihiraki');
+    const endPageMihiraki = document.getElementById('endPageMihiraki');
     const btnMihiraki = document.getElementById('btnMihiraki');
+    
     imageCanvas = document.getElementById('imageCanvas');
     ctx = imageCanvas.getContext('2d');
     generateCoordMapRatio();
@@ -50,7 +60,7 @@ window.addEventListener('load', () => {
     
     async function processPDF(mode) {
         try {
-            // ↓↓↓ ★★★ これが「修正2 (jsPDFCtor)」のロジック ★★★ ↓↓↓
+            // (jsPDFCtor のロジック ... 変更なし)
             const jsPDFCtor =
               (window.jspdf && (window.jspdf.jsPDF || window.jspdf.default)) // v2 UMD
               || window.jsPDF;                                                // v1 Global
@@ -69,7 +79,7 @@ window.addEventListener('load', () => {
             
             const orientation = (mode === 'Mihiraki') ? 'landscape' : 'portrait';
             
-            // ↓↓↓ ★★★ 修正点 (new jsPDFCtor を使用) ★★★ ↓↓↓
+            // (new jsPDFCtor を使用 ... 変更なし)
             const pdf = new jsPDFCtor({ orientation: orientation, unit: 'pt', format: 'a4' });
 
             const a4Width = pdf.internal.pageSize.getWidth();
@@ -102,7 +112,6 @@ window.addEventListener('load', () => {
             setStatus(`[${mode}] 全 ${pagesToProcess.length} ページを生成中... (3/3)`, 'processing');
             const cropCanvas = document.createElement('canvas');
             const cropCtx = cropCanvas.getContext('2d');
-            // (中略 ... forループ、pdf.addImage)
             for (let i = 0; i < pagesToProcess.length; i++) {
                 const pageData = pagesToProcess[i];
                 const slice = (mode === 'Tampage') ? getSliceData('Tampage', pageData) : getSliceData('Mihiraki', pageData[0]);
@@ -115,7 +124,7 @@ window.addEventListener('load', () => {
                     0, 0, slice.widthPx, slice.heightPx
                 );
                 
-                // ★★★ 修正点 1: 'image/jpeg' を 'image/png' に変更 ★★★
+                // ★★★ iPad黒塗りバグ修正 1: 'image/png' に変更 ★★★
                 const imgData = cropCanvas.toDataURL('image/png');
                 
                 if (i > 0) { pdf.addPage('a4', orientation); }
@@ -129,7 +138,7 @@ window.addEventListener('load', () => {
                 const offsetX = (a4Width - newWidth) / 2;
                 const offsetY = (a4Height - newHeight) / 2;
                 
-                // ★★★ 修正点 2: 'JPEG' を 'PNG' に変更 ★★★
+                // ★★★ iPad黒塗りバグ修正 2: 'PNG' に変更 ★★★
                 pdf.addImage(imgData, 'PNG', offsetX, offsetY, newWidth, newHeight);
                 
                 if (i % 10 === 0 && i > 0) {

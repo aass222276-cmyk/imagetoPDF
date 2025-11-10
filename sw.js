@@ -1,13 +1,14 @@
-// ★★★ 修正点: v9.0.2 など新しいバージョン名に変更 ★★★
-const CACHE_NAME = 'name-pdf-app-v1.0.3'
+// ★★★ 修正点: v9 にバージョンアップ ★★★
+const CACHE_NAME = 'name-pdf-app-v2.0.1'
 
-// ★★★ 修正点: 'jspdf.umd.min.js' をキャッシュ対象から削除 ★★★
+// ★★★ 修正点: 'jspdf.umd.min.js' をキャッシュ対象に追加 ★★★
 const urlsToCache = [
   '.',
   'index.html',
   'style.css',
   'script.js',
-  'manifest.json'
+  'manifest.json',
+  'jspdf.umd.min.js' // ← これが正しいファイル名
   // 'icons/icon-192x192.png',
   // 'icons/icon-512x512.png'
 ];
@@ -36,15 +37,15 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// (アクティベート処理 ... v9.0.2 以外を削除)
+// (アクティベート処理 ... v9 以外を削除)
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME]; // [ 'name-pdf-app-v9.0.2' ]
+  const cacheWhitelist = [CACHE_NAME]; // [ 'name-pdf-app-v9' ]
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            // v9.0.2 以外を削除
+            // v9 以外を削除
             return caches.delete(cacheName);
           }
         })
