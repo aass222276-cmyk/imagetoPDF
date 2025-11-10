@@ -1,55 +1,60 @@
-// ★★★ 修正点: v9 にバージョンアップ ★★★
-const CACHE_NAME = 'name-pdf-app-v2.0.1'
+// sw.js — cache jsPDF(CDN)を含む完全版（Bプラン）
+// まずはオンラインで一度アクセスしてCDNをキャッシュします。
 
-// ★★★ 修正点: 'jspdf.umd.min.js' をキャッシュ対象に追加 ★★★
+const CACHE_NAME = 'namepdf-v2.5.0';
 const urlsToCache = [
-  '.',
-  'index.html',
-  'style.css',
-  'script.js',
-  'manifest.json',
-  'jspdf.umd.min.js' // ← これが正しいファイル名
-  // 'icons/icon-192x192.png',
-  // 'icons/icon-512x512.png'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.json',
+  // 必要なら画像やアイコンも追加
+  // './otamesi.jpg',
+  // './icons/icon-192.png',
+  // jsPDF（index.htmlで使っているURLと完全一致させること）
+  'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',
 ];
 
-// (インストール処理 ... 変更なし)
-self.addEventListener('install', event => {
+// ----- install -----
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
+  self.skipWaiting();
 });
 
-// (フェッチ処理 ... 変更なし)
-self.addEventListener('fetch', event => {
+// ----- activate -----
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((k) => (k === CACHE_NAME ? null : caches.delete(k))))
+    )
+  );
+  self.clients.claim();
+});
+
+// ----- fetch (cache-first) -----
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
-});
+    caches.match(req, { ignoreSearch: true }).then((cached) => {
+      if (cached) return cached;
 
-// (アクティベート処理 ... v9 以外を削除)
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME]; // [ 'name-pdf-app-v9' ]
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            // v9 以外を削除
-            return caches.delete(cacheName);
+      // ネットに無ければ失敗、あれば（同一オリジンのみ）キャッシュへ
+      return fetch(req).then((res) => {
+        try {
+          const resClone = res.clone();
+          const sameOrigin = new URL(req.url).origin === self.location.origin;
+
+          if (res.ok && sameOrigin) {
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
           }
-        })
-      );
+        } catch (_) {
+          // 何もしない（opaque等）
+        }
+        return res;
+      });
     })
   );
 });
