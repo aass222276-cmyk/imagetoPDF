@@ -1,5 +1,3 @@
-// ★ 修正済み: 'window.addEventListener('load', ...)' ラッパーを削除
-
 // (CONFIG や グローバル変数は変更なし)
 const CONFIG = {
     REF_WIDTH: 514.6, REF_HEIGHT: 363.9, BOX_WIDTH_PX: 33.7,
@@ -177,7 +175,7 @@ async function processPDF(mode) {
 }
 
 // (ヘルパー関数 ... 変更なし)
-// (getValidatedInputs, generateCoordMapRatio, generateOrderMaps, getSliceData)
+// (getValidatedInputs, generateCoordMapRatio, generateOrderMaps)
 // (中略)
 function getValidatedInputs(mode) {
     let filename, start, end, startInput, endInput, defaultStart, defaultEnd;
@@ -252,10 +250,13 @@ function getColRowFromTampageID(id) {
     if (id < 1 || id > CONFIG.MAX_PAGES || !orderMapTampage[id]) { throw new Error(`無効なページID ${id}`); }
     return orderMapTampage[id];
 }
+
+// ★★★ ここを修正しました ★★★
 function getCoordsRatio(col, row) {
     if (!coordMapRatio[col] || !coordMapRatio[col][row]) { throw new Error(`無効な座標 [${col}, ${row}]`); }
-    return coordMapTampage[col][row];
+    return coordMapRatio[col][row]; // 'coordMapTampage' -> 'coordMapRatio' に修正
 }
+
 function getSliceData(mode, id) {
     const imgW = uploadedImageWidth;
     const imgH = uploadedImageHeight;
