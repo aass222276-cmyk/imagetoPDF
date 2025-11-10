@@ -73,7 +73,7 @@
             </button>
         </section>
 
-        <section classs="box" id="download-section">
+        <section class="box" id="download-section">
             <h2>ミニネームのclipデータ</h2>
             
             <a href="ミニネーム.zip" download="ミニネーム.zip" class="button button-download">
@@ -81,7 +81,9 @@
             </a>
         </section>
 
-    </div> <script>
+    </div> 
+    
+    <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('sw.js')

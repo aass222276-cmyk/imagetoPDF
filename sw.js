@@ -1,7 +1,8 @@
 // sw.js — cache jsPDF(CDN)を含む完全版（Bプラン）
 // まずはオンラインで一度アクセスしてCDNをキャッシュします。
 
-const CACHE_NAME = 'namepdf-v2.5.0';
+// ★ 修正: バージョンを更新
+const CACHE_NAME = 'namepdf-v2.5.1'; 
 const urlsToCache = [
   './',
   './index.html',
@@ -11,8 +12,8 @@ const urlsToCache = [
   // 必要なら画像やアイコンも追加
   // './otamesi.jpg',
   // './icons/icon-192.png',
-  // jsPDF（index.htmlで使っているURLと完全一致させること）
-  'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',
+  // ★ 修正: index.htmlで使っているURL (cdnjs) と完全一致させる
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
 ];
 
 // ----- install -----
