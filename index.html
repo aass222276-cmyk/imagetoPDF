@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤ミニネーム→PDF❤</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <h1>❤ミニネーム→PDF❤</h1>
+
+    <div class="container">
+
+        <section class="box" id="upload-section">
+            <h2>画像をアップロード</h2>
+            <p class="note">画像出力（jpeg、png）してからアップしてください。</p>
+            
+            <input type="file" id="imageLoader" accept="image/*">
+            <div id="imagePreviewContainer" style="display:none;">
+                <img id="imagePreview" alt="アップロード画像のプレビュー">
+            </div>
+            <canvas id="imageCanvas" style="display:none;"></canvas>
+        </section>
+
+        <div id="status"></div>
+
+        <section class="box" id="tampage-section">
+            <h2>単ページ</h2>
+            <div class="setting-item">
+                <label for="pdfNameTampage">PDFファイル名:</label>
+                <div class="filename-input-wrapper">
+                    <input type="text" id="pdfNameTampage" value="単ページ" class="filename-input">
+                    <span class="pdf-suffix">.pdf</span>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label for="startPageTampage">ページ範囲:</label>
+                <div class="range-inputs">
+                    <input type="number" id="startPageTampage" value="2" min="1" max="60">
+                    <span>から</span>
+                    <input type="number" id="endPageTampage" value="60" min="1" max="60">
+                    <span>まで</span>
+                </div>
+            </div>
+            <button id="btnTampage" class="button button-secondary" disabled>
+                確定
+            </button>
+        </section>
+
+        <section class="box" id="mihiraki-section">
+            <h2>見開き</h2>
+            <div class="setting-item">
+                <label for="pdfNameMihiraki">PDFファイル名:</label>
+                <div class="filename-input-wrapper">
+                    <input type="text" id="pdfNameMihiraki" value="見開き" class="filename-input">
+                    <span class="pdf-suffix">.pdf</span>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label for="startPageMihiraki">ページ範囲 (単ページ番号基準):</label>
+                <div class="range-inputs">
+                    <input type="number" id="startPageMihiraki" value="1" min="1" max="60">
+                    <span>から</span>
+                    <input type="number" id="endPageMihiraki" value="60" min="1" max="60">
+                    <span>まで</span>
+                </div>
+            </div>
+            <button id="btnMihiraki" class="button button-primary" disabled>
+                確定
+            </button>
+        </section>
+
+        <section classs="box" id="download-section">
+            <h2>ミニネームのclipデータ</h2>
+            
+            <a href="ミニネーム.zip" download="ミニネーム.zip" class="button button-download">
+                ミニネーム.zip をダウンロード
+            </a>
+        </section>
+
+    </div> <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker registered.', reg))
+            .catch(err => console.log('Service Worker registration failed.', err));
+        });
+      }
+    </script>
+    <script src="script.js" defer></script>
+
+</body>
+</html>

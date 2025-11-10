@@ -1,0 +1,182 @@
+/* --- 全体の基本設定 --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans CJK JP", "Helvetica Neue", Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 15px; /* ★ 修正: 全体のパディングを詰める */
+}
+
+h1 {
+    text-align: center;
+    color: #222;
+    /* ★ 修正: 上下の余白を詰める (コンパクト化) */
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 1.6em; /* 少し小さく */
+}
+
+h2 {
+    color: #007bff;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 15px; /* 余白を調整 */
+    font-size: 1.25em; /* 少し小さく */
+}
+
+/* --- レイアウトコンテナ --- */
+.container {
+    max-width: 600px; /* ★ 修正: 最大幅を少し狭める */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* ★ 修正: ボックス間の隙間を詰める */
+}
+
+.box {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px; /* ★ 修正: 内側のパディングを少し詰める */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* --- 各セクションの要素 --- */
+
+/* 1. アップロード */
+#imageLoader {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#imagePreviewContainer {
+    margin-top: 15px;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+#imagePreview { max-width: 100%; height: auto; }
+
+/* ★★★ 新規追加: 注釈スタイル ★★★ */
+.note {
+    font-size: 0.85em;
+    color: #555;
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+
+/* 2 & 3. 設定項目 */
+.setting-item {
+    margin-bottom: 15px; /* ★ 修正: 余白を詰める */
+}
+
+.setting-item label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 0.9em;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 9px 10px; /* ★ 修正: 高さを少し詰める */
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.filename-input-wrapper { display: flex; align-items: center; }
+.filename-input {
+    width: 100%;
+    flex: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.pdf-suffix {
+    padding: 9px 12px; /* ★ 修正: 高さを少し詰める */
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-left: none;
+    font-size: 1em;
+    color: #555;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.range-inputs { display: flex; align-items: center; gap: 8px; }
+.range-inputs input[type="number"] { width: 70px; } /* ★ 修正: さらに幅を詰める */
+.range-inputs span { font-size: 0.9em; color: #555; }
+
+/* 実行ボタン (共通) */
+.button {
+    width: 100%;
+    font-size: 1.05em; /* ★ 修正: 少し小さく */
+    font-weight: bold;
+    padding: 11px 20px; /* ★ 修正: 高さを少し詰める */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    margin-top: 5px; /* ★ 修正: 余白を詰める */
+}
+
+.button-primary { background-color: #007bff; color: white; }
+.button-primary:hover { background-color: #0056b3; }
+.button-secondary { background-color: #007bff; color: white; }
+.button-secondary:hover { background-color: #007bff; }
+.button:disabled { background-color: #ccc; color: #888; cursor: not-allowed; }
+
+/* ★★★ 新規追加: ダウンロードボタン ★★★ */
+.button-download {
+    background-color: #28a745; /* 緑色 */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: block; /* aタグをボタンのように見せる */
+}
+.button-download:hover {
+    background-color: #218838;
+}
+
+/* ★★★ 修正: ステータス表示 (空の時は非表示) ★★★ */
+#status {
+    text-align: center;
+    font-size: 1.05em;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 5px;
+    /* ★ 修正: 上下のマージンを詰める */
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+/* ステータス欄が空 (初期状態) の時は、パディングとマージンを0にする */
+#status:empty {
+    padding: 0;
+    margin: 0;
+}
+
+/* ステータス (成功、エラー、処理中) */
+#status.success { background-color: #d4edda; color: #155724; }
+#status.error { background-color: #f8d7da; color: #721c24; }
+#status.processing { background-color: #fff3cd; color: #856404; }
+
+/* ★★★ 新規追加: ダウンロードセクション用 (boxとほぼ同じ) ★★★ */
+#download-section {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+}
